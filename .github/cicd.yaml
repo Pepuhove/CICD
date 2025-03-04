@@ -2,7 +2,8 @@ name: CI/CD Pipeline
 
 on:
   push:
-   
+    branches:
+      - main  # Add the branch you want to trigger the workflow on
 
 jobs:
   build:
@@ -29,15 +30,15 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.REGISTRY }}my-app-repo .
+          docker build -t ${{ secrets.REGISTRY }}/my-app-repo:latest .
 
       - name: Scan Docker image with Trivy
         run: |
-          trivy image ${{ secrets.REGISTRY }}my-app-repo
+          trivy image ${{ secrets.REGISTRY }}/my-app-repo:latest
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ secrets.REGISTRY }}my-app-repo
+          docker push ${{ secrets.REGISTRY }}/my-app-repo:latest
 
       - name: Run SonarQube analysis
         run: |
