@@ -30,7 +30,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest .
+          #docker build -t ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest .
+          docker build -t my-app-repo:latest .
 
       - name: Tag Docker image
         run: |
