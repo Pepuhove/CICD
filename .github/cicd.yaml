@@ -26,8 +26,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          #docker build -t ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest .
-          docker build -t my-app-repo .
+          docker build -t ${{ steps.login-ecr.outputs.registry }} my-app-repo:latest .
+          #docker build -t my-app-repo .
 
       - name: Scan Docker image with Trivy
         run: |
