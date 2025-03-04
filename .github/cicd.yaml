@@ -26,16 +26,20 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ steps.login-ecr.outputs.registry }} my-app-repo:latest .
-          #docker build -t my-app-repo .
+          #docker build -t ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest .
+          docker build -t my-app-repo .
+          docker tag my-app-repo:latest 438465157882.dkr.ecr.us-east-1.amazonaws.com/my-app-repo:latest
+          
 
       - name: Scan Docker image with Trivy
         run: |
           trivy image ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest
+          438465157882.dkr.ecr.us-east-1.amazonaws.com/my-app-repo:latest
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest
+          #docker push ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest
+          docker push 438465157882.dkr.ecr.us-east-1.amazonaws.com/my-app-repo:latest
 
       - name: Run SonarQube analysis
         run: |
