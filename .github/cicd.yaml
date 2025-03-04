@@ -23,20 +23,18 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-          registry: ${{ secrets.REGISTRY }}
 
       - name: Login to Docker ECR
         run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin  registry: ${{ secrets.REGISTRY }}
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.REGISTRY }}
 
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.REGISTRY }}/my-app-repo:latest .
-         
 
       - name: Tag Docker image
         run: |
-          docker tag ${{ secrets.REGISTRY }}/my-app-repo:latest  registry: ${{ secrets.REGISTRY }}:latest
+          docker tag ${{ secrets.REGISTRY }}/my-app-repo:latest ${{ secrets.REGISTRY }}/my-app-repo:latest
 
       - name: Scan Docker image with Trivy
         run: |
@@ -44,7 +42,7 @@ jobs:
 
       - name: Push Docker image to ECR
         run: |
-          docker push  registry: ${{ secrets.REGISTRY }}:latest
+          docker push ${{ secrets.REGISTRY }}/my-app-repo:latest
 
       - name: Run SonarQube analysis
         run: |
