@@ -32,9 +32,9 @@ jobs:
         run: |
           docker build -t ${{ secrets.REGISTRY }}/my-app-repo:latest .
 
-      - name: Tag Docker image
-        run: |
-          docker tag ${{ secrets.REGISTRY }}/my-app-repo:latest ${{ secrets.REGISTRY }}/my-app-repo:latest
+      # - name: Tag Docker image
+      #   run: |
+      #     docker tag ${{ secrets.REGISTRY }}/my-app-repo:latest ${{ secrets.REGISTRY }}/my-app-repo:latest
 
       - name: Scan Docker image with Trivy
         run: |
