@@ -24,21 +24,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Login to Docker ECR
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+
       - name: Build Docker image
         run: |
-          #docker build -t ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest .
-          docker build -t my-app-repo .
-          docker tag my-app-repo:latest 438465157882.dkr.ecr.us-east-1.amazonaws.com/my-app-repo:latest
-          
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest .
+
+      - name: Tag Docker image
+        run: |
+          docker tag ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest 438465157882.dkr.ecr.us-east-1.amazonaws.com/my-app-repo:latest
 
       - name: Scan Docker image with Trivy
         run: |
           trivy image ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest
-          438465157882.dkr.ecr.us-east-1.amazonaws.com/my-app-repo:latest
 
       - name: Push Docker image to ECR
         run: |
-          #docker push ${{ steps.login-ecr.outputs.registry }}/my-app-repo:latest
           docker push 438465157882.dkr.ecr.us-east-1.amazonaws.com/my-app-repo:latest
 
       - name: Run SonarQube analysis
@@ -56,9 +59,17 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
+      - name: Terraform Format
+        run: |
+          terraform fmt -check
+
       - name: Terraform Init
         run: |
           terraform init
+
+      - name: Terraform Validate
+        run: |
+          terraform validate
 
       - name: Terraform Apply
         run: |
