@@ -30,7 +30,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.REGISTRY }}/my-app-repo:latest .
+            docker build -t /my-app-repo:latest .
+          # docker build -t ${{ secrets.REGISTRY }}/my-app-repo:latest .
 
       # - name: Tag Docker image
       #   run: |
