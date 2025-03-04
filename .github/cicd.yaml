@@ -29,15 +29,15 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.REGISTRY }} my-app-repo:latest .
+          docker build -t ${{ secrets.REGISTRY }} my-app-repo .
 
       - name: Scan Docker image with Trivy
         run: |
-          trivy image ${{ secrets.REGISTRY }} my-app-repo:latest
+          trivy image ${{ secrets.REGISTRY }} my-app-repo
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ secrets.REGISTRY }} my-app-repo:latest
+          docker push ${{ secrets.REGISTRY }} my-app-repo
 
       - name: Run SonarQube analysis
         run: |
